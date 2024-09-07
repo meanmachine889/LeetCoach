@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Initialize the Google Generative AI with your API key from the environment variable
-const genAI = new GoogleGenerativeAI("AIzaSyDFN_f8ew4mH98MMxTMP22Dpf1V-RteUDk");
+const genAI = new GoogleGenerativeAI(process.env.KEY ?? 'YOUR_DEFAULT_API_KEY');
 
 // Get the model you're working with (Gemini 1.5 flash)
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
