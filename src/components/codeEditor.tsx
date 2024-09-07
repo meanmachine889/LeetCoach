@@ -2,23 +2,21 @@ import React from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { cpp } from '@codemirror/lang-cpp';
 
-function CodeEditor() {
-  const [value, setValue] = React.useState(`#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!" << std::endl;\n    return 0;\n}`);
-  
+function CodeEditor({ code, setCode }: { code: string, setCode: (value: string) => void }) {
   const onChange = React.useCallback((val: string, viewUpdate: any) => {
     console.log('val:', val);
-    setValue(val);
-  }, []);
+    setCode(val);
+  }, [setCode]);
 
   return (
-    <div className="flex flex-col w-[100%] h-[100%] gap-9 bg-black">
+    <div className="flex flex-col flex-1 w-[100%] h-[100%] gap-9 bg-black">
       <CodeMirror
-        value={value}
+        value={code}
         height="100%"
         width="100%"
         theme="dark"
         extensions={[cpp()]}
-        className="h-[100%] bg-black text-white rounded-lg"
+        className="h-[100%] w-[100%] rounded-xl"
         onChange={onChange}
       />
     </div>

@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("URL")
+}
+
+model Question {
+  id          Int          @id @default(autoincrement())
+  name        String
+  question    String
+  codeFrame   String
+  solution    String
+  difficulty  String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  submissions Submission[]
+  testcases   TestCase[]
+
+  Output Output[]
+}
+
+model TestCase {
+  id         Int      @id @default(autoincrement())
+  input      String
+  output     String
+  questionId Int      
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  question   Question @relation(fields: [questionId], references: [id])
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  username    String       @unique
+  role        UserRole     @default(SOLVER)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  password    String
+  email       String       @unique
+  submissions Submission[]
+  sessions    Session[]
+}
+
+model Session {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  token      String   @unique
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Submission {
+  id         Int      @id @default(autoincrement())
+  code       String
+  questionId Int
+  userId     Int
+  result     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  question   Question @relation(fields: [questionId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Output {
+  id         Int      @id @default(autoincrement())
+  output     String
+  questionId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  question   Question @relation(fields: [questionId], references: [id])
+}
+
+enum UserRole {
+  ADMIN
+  SOLVER
+}
